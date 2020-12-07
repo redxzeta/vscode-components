@@ -1,3 +1,20 @@
+# How to run
+
+1. `yarn install`
+
+1. `yarn start`
+
+1. open second terminal
+
+1. `cd example`
+
+1. `yarn install`
+
+1. `yarn start`
+
+1. go to `localhost:1234`
+
+
 # React Run Code
 
 ![](https://github.com/Open-EdTech/react-run-code/blob/main/.github/intellisense.gif)
