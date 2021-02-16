@@ -9,6 +9,7 @@ import { Box, Button, Grid, makeStyles, Typography } from '@material-ui/core';
 import ChevronRightIcon from '@material-ui/icons/ChevronRight';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import FolderIcon from '@material-ui/icons/Folder';
+import DescriptionIcon from '@material-ui/icons/Description';
 export type editorProps = {
   id: string;
   modelsInfo: modelsInfoType;
@@ -39,6 +40,8 @@ const useStyles = makeStyles({
     background: '#5e696b',
     fontSize: '8px',
     margin: 'auto',
+    display: 'flex',
+    justifyContent: 'flex-start',
     // alignItems:"center"
   },
   section: {
@@ -50,12 +53,37 @@ const useStyles = makeStyles({
     height: 'auto',
   },
   componentsSection: {
-    width: '100%',
-    marginLeft: '15px',
+    width: 'inherit',
+    // marginLeft: '15px',
+
+    marginBottom: '10px',
+    listStyleType: 'none',
   },
   componentsButton: {
     width: '100%',
     height: '10px',
+  },
+  itemButton: {
+    color: 'white',
+    width: '80%',
+    height: '30px',
+    fontSize: '10px',
+    marginRight: 'auto',
+    marginBottom: '5px',
+    display: 'flex',
+    justifyContent: 'flex-start',
+    backgroundColor: '#a5b1b3',
+  },
+  subItemFolder: {
+    justifyContent: 'flex-start',
+    fontSize: '5px',
+  },
+  right: {
+    flexGrow: 1,
+  },
+  buttonText: {
+    marginLeft: '5px',
+    marginRight: '5px',
   },
 });
 const sampleData = [
@@ -65,7 +93,7 @@ const sampleData = [
     type: 'folder',
     files: [
       {
-        id: '_index',
+        id: 'index.tsx',
         name: 'index.tsx',
         type: 'tsx',
       },
@@ -75,6 +103,23 @@ const sampleData = [
     _id: '_package.json',
     name: 'package.json',
     type: 'json',
+  },
+  {
+    _id: '_styles',
+    name: 'styles',
+    type: 'folder',
+    files: [
+      {
+        id: '_app.js',
+        name: 'app.js',
+        type: 'js',
+      },
+      {
+        id: '_style.css',
+        name: 'style.css',
+        type: 'css',
+      },
+    ],
   },
 ];
 export default function Editor({
@@ -88,7 +133,6 @@ export default function Editor({
   const [active, setActive] = useState(true);
   const showSection = (): void => {
     setActive(!active);
-    console.log(active);
   };
 
   return (
@@ -115,7 +159,15 @@ export default function Editor({
 }
 
 const Sidebar = ({ button, showSection }: sideBarProps) => {
+  const [showReport, setshowReport] = useState({});
   const classes = useStyles();
+  const toggleReports = (id: 'string') => {
+    const index = sampleData.findIndex(el => el._id === id);
+    setshowReport((prevshowReport: 'string') => ({
+      ...(showReport as {}),
+      [id]: !prevshowReport[index],
+    }));
+  };
   return (
     <Box className={classes.section}>
       <Button onClick={showSection} className={classes.button}>
@@ -125,13 +177,28 @@ const Sidebar = ({ button, showSection }: sideBarProps) => {
           <ExpandMoreIcon fontSize="small" />
         )}{' '}
         <Typography variant="body2">VSCODE-COMPONENTS</Typography>{' '}
-        <div style={{ flexGrow: 1 }} />
       </Button>
-      <Box className={classes.components}>
-        <Box className={classes.componentsSection}>
-          <Typography variant="h5">TEST</Typography>
+
+      {!button && (
+        <Box className={classes.components}>
+          <ul className={classes.componentsSection}>
+            {sampleData.map(file => {
+              return (
+                <li>
+                  <Button className={classes.itemButton} key={file._id}>
+                    {file.type === 'folder' ? (
+                      <FolderIcon />
+                    ) : (
+                      <DescriptionIcon />
+                    )}
+                    <span className={classes.buttonText}>{file.name}</span>
+                  </Button>
+                </li>
+              );
+            })}
+          </ul>
         </Box>
-      </Box>
+      )}
     </Box>
   );
 };
